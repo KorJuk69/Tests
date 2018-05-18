@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Index</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+</head>
+<body>
+<div class="container">
+    <a href="/addNews" class="btn btn-success">Add news</a><p th:text="${isNewsPresent}"></p>
+    <a href="/delete" class="btn btn-success">Delete news</a><p th:text="${isDelete}"></p>
+    <a href="/login" class="btn btn-success">Login</a><p th:text="${isLogin}"></p>
+</div>
+</body>
+</html>
