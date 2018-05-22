@@ -6,4 +6,10 @@ public interface UserService {
     void uidLogin();
 
     void uidLogin(WebDriver driver);
+
+    void uidRegistrationFirst();
+
+    void uidRegistrationSecond(WebDriver driver, String captcha);
+
+    String getRandomEmail(WebDriver driver);
 }

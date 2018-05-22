@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Index</title>
+    <title>Enter captcha</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
 </head>
 <body>
 <div class="container">
-    <a href="/addNews" class="btn btn-success">Add news</a><p th:text="${isNewsPresent}"></p>
-    <a href="/delete" class="btn btn-success">Delete news</a><p th:text="${isDelete}"></p>
-    <a href="/login" class="btn btn-success">Login</a><p th:text="${isLogin}"></p>
-    <a href="/uidRegistration" class="btn btn-success">Local registration</a><p th:text="${isRegister}"></p>
+    <form action="/uidRegistrationCaptcha" method="post" id="captchaForm">
+        <img src="/captchaScreen"/>
+        <div class="form-group">
+            <label>Enter captcha:</label>
+            <input th:required="required" class="form-control" placeholder="Enter captcha" name="captcha"/>
+        </div>
+        <button type="submit" class="btn btn-success" id="Submit" name="Submit" value="Submit">Submit</button>
+    </form>
 </div>
 </body>
 </html>
