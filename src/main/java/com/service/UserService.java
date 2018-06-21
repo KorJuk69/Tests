@@ -11,5 +11,9 @@ public interface UserService {
 
     void uidRegistrationSecond(WebDriver driver, String captcha);
 
-    String getRandomEmail(WebDriver driver);
+    String getRandomEmail();
+
+    void toAdminPanel(WebDriver driver);
+
+    void changeRegistrationMethod(WebDriver driver, String method);
 }

@@ -9,10 +9,14 @@
 </head>
 <body>
 <div class="container">
-    <a href="/addNews" class="btn btn-success">Add news</a><p th:text="${isNewsPresent}"></p>
-    <a href="/delete" class="btn btn-success">Delete news</a><p th:text="${isDelete}"></p>
-    <a href="/login" class="btn btn-success">Login</a><p th:text="${isLogin}"></p>
-    <a href="/uidRegistration" class="btn btn-success">Local registration</a><p th:text="${isRegister}"></p>
+    <form action="/startTests" method="post" name="tests" id="test">
+        <div class="checkbox">
+            <th:block th:each="test : ${testList}">
+                <label><input type="checkbox" name="selectedTests" th:value="${test.getName()}" th:text="${test.getName()}"/></label>
+            </th:block>
+        </div>
+        <button type="submit" class="btn btn-success">Start</button>
+    </form>
 </div>
 </body>
 </html>

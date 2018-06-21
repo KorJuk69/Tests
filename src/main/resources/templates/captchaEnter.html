@@ -9,11 +9,12 @@
 </head>
 <body>
 <div class="container">
-    <form action="/uidRegistrationCaptcha" method="post" id="captchaForm">
+    <form action="/setCaptcha" method="post" id="captchaForm">
         <img src="/captchaScreen"/>
         <div class="form-group">
             <label>Enter captcha:</label>
             <input th:required="required" class="form-control" placeholder="Enter captcha" name="captcha"/>
+            <input type="hidden" th:value="${testName}" name="testName"/>
         </div>
         <button type="submit" class="btn btn-success" id="Submit" name="Submit" value="Submit">Submit</button>
     </form>
