@@ -7,7 +7,8 @@ public class Test {
     private String name;
     private WebDriver driver;
     private byte[] captchaImg;
-    private boolean isPassed = false;
+    private boolean isPassed;
+    private boolean isSelected;
 
     public Test(String name) {
         this.name = name;
@@ -46,5 +47,13 @@ public class Test {
 
     public void setPassed(boolean passed) {
         isPassed = passed;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

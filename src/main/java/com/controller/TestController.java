@@ -3,6 +3,7 @@ package com.controller;
 import com.data.Captcha;
 import com.data.Test;
 import com.repository.CaptchaRepository;
+import com.repository.TestRepository;
 import com.service.TestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,16 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class TestController {
 
     private final TestService testService;
     private final CaptchaRepository captchaRepository;
+    private final TestRepository testRepository;
 
-    public TestController(TestService testService, CaptchaRepository captchaRepository) {
+    public TestController(TestService testService, CaptchaRepository captchaRepository, TestRepository testRepository) {
         this.testService = testService;
         this.captchaRepository = captchaRepository;
+        this.testRepository = testRepository;
     }
 
     @GetMapping("/")
@@ -30,15 +34,14 @@ public class TestController {
 
     @PostMapping("/startTests")
     public String startTests(@RequestParam(value = "selectedTests", required = false) ArrayList<String> selectedTests, Model model){
+        testService.clearTestBools();
+        selectedTests.forEach(selectedTest ->
+                testRepository.getTests().stream()
+                .filter(test -> test.getName().equals(selectedTest))
+                .findFirst().get().setSelected(true));
         testService.distributeTests(selectedTests);
         if (isAllCaptchaEntered(model)) return "captchaEnter";
-        return "index";
-    }
-
-    @GetMapping
-    public String captchaEnter(String testName, Model model) {
-        model.addAttribute("testName", testName);
-        return "captchaEnter";
+        return testResult(model);
     }
 
     @PostMapping("/setCaptcha")
@@ -47,7 +50,15 @@ public class TestController {
         if (isAllCaptchaEntered(model)) return "captchaEnter";
         testService.distributeTestsWithCaptcha();
         captchaRepository.clearCaptchas();
-        return "index";
+        return "testResult";
+    }
+
+    @GetMapping("/testResult")
+    public String testResult(Model model){
+        List<Test> selectedTests = testRepository.getTests().stream()
+                .filter(Test::isSelected).collect(Collectors.toList());
+        model.addAttribute("selectedTests", selectedTests);
+        return "testResult";
     }
 
     @GetMapping("/captchaScreen")
@@ -63,12 +74,7 @@ public class TestController {
 
     @ModelAttribute("testList")
     public List<Test> getTestList(){
-        List<Test> tests = new ArrayList<>();
-        tests.add(new Test("News add test"));
-        tests.add(new Test("News delete test"));
-        tests.add(new Test("Login test"));
-        tests.add(new Test("UID registration test"));
-        return tests;
+        return testRepository.getTests();
     }
 
     private boolean isAllCaptchaEntered(Model model) {

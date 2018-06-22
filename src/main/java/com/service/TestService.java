@@ -7,4 +7,6 @@ public interface TestService {
     void distributeTests(List<String> selectedTests);
 
     void distributeTestsWithCaptcha();
+
+    void clearTestBools();
 }

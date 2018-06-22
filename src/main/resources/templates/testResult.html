@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <title>Test results</title>
+</head>
+<body>
+<div class="container">
+    <th:block th:each="test : ${selectedTests}">
+        <div>
+            <p th:text="${test.getName()}"></p>
+            <p th:text="${test.isPassed()}"></p>
+            <br/>
+        </div>
+    </th:block>
+</div>
+</body>
+</html>

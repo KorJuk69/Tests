@@ -1,6 +1,7 @@
 package com.service;
 
 import com.repository.CaptchaRepository;
+import com.repository.TestRepository;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
@@ -17,26 +18,21 @@ public class UserServiceImpl implements UserService {
 
     private final DriverService driverService;
     private final CaptchaRepository captchaRepository;
+    private final TestRepository testRepository;
 
-    public UserServiceImpl(DriverService driverService, CaptchaRepository captchaRepository) {
+    public UserServiceImpl(DriverService driverService, CaptchaRepository captchaRepository, TestRepository testRepository) {
         this.driverService = driverService;
         this.captchaRepository = captchaRepository;
+        this.testRepository = testRepository;
     }
 
     @Override
     public void uidLogin() {
         WebDriver driver = driverService.getDriver();
-        driver.get("https://login.uid.me/?site=2selenium&ref=http%3A//selenium.at.ua/");
-        driver.findElement(By.id("uid_email")).sendKeys("dima.k@ucoz-team.net");
-        driver.findElement(By.id("uid_password")).sendKeys("cSMJiMoS");
-        driver.findElement(By.id("uid-form-submit")).click();
-        while (!driver.getCurrentUrl().equals("http://selenium.at.ua/")) {
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+        uidLogin(driver);
+        testRepository.getTests().stream()
+                .filter(test -> test.getName().equals("Login test"))
+                .findFirst().get().setPassed(true);
         driver.quit();
     }
 
@@ -89,7 +85,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void uidRegistrationSecond(WebDriver driver, String captcha) {
-
         String email = getRandomEmail();
 
         driver.findElement(By.id("uf-email")).sendKeys(email);
@@ -99,8 +94,11 @@ public class UserServiceImpl implements UserService {
             driver.quit();
             throw new RuntimeException("Incorrect captcha");
         }
-        verifyEmail(driver, email);
+        //verifyEmail(driver, email);
         if (driver.findElement(By.cssSelector("div.register-form-wrapper h2")).getText().equals("Отлично!")) {
+            testRepository.getTests().stream()
+                    .filter(test -> test.getName().equals("UID registration test"))
+                    .findFirst().get().setPassed(true);
             driver.quit();
         } else {
             throw new RuntimeException("Registration failed");
