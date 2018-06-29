@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
+    <title>Response codes</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+        function sel_all(){
+            if( !document.codes.selectedPages ) return;
+            if( !document.codes.selectedPages.length )
+                document.codes.selectedPages.checked = !document.codes.selectedPages.checked;
+            else
+                for(var i=0;i<document.codes.selectedPages.length;i++)
+                    document.codes.selectedPages[i].checked = !document.codes.selectedPages[i].checked;
+        }
+        /*]]>*/
+    </script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <span class="navbar-brand mb-0 h1">U-Tests</span>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Tests <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/responseCodes">Response Codes <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<form action="/responseCodesResult" method="post" name="codes" id="codesid">
+    <table>
+        <tbody>
+        <tr>
+            <td><label>
+                <a class="btn btn-success" href="javascript:sel_all()" title="Check/uncheck all">Check/uncheck all</a>
+            </label></td>
+        </tr>
+        <tr th:each="page : ${pages.entrySet()}">
+            <td><label>
+                <input type="checkbox" name="selectedPages" th:value="${page.getKey()}" th:text="${page.getKey()}"/>
+            </label></td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit" class="btn btn-success">Start</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+</html>

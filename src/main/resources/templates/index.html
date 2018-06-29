@@ -8,6 +8,19 @@
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
 </head>
 <body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-success">
+    <span class="navbar-brand mb-0 h1">U-Tests</span>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Tests <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/responseCodes">Response Codes <span class="sr-only">(current)</span></a>
+            </li>
+        </ul>
+    </div>
+</nav>
 <div class="container">
     <form action="/startTests" method="post" name="tests" id="test">
         <div class="checkbox">
@@ -18,5 +31,6 @@
         <button type="submit" class="btn btn-success">Start</button>
     </form>
 </div>
+
 </body>
 </html>

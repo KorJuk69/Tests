@@ -9,6 +9,7 @@ public class Test {
     private byte[] captchaImg;
     private boolean isPassed;
     private boolean isSelected;
+    private String exception;
 
     public Test(String name) {
         this.name = name;
@@ -55,5 +56,13 @@ public class Test {
 
     public void setSelected(boolean selected) {
         isSelected = selected;
+    }
+
+    public String getException() {
+        return exception;
+    }
+
+    public void setException(String exception) {
+        this.exception = exception;
     }
 }

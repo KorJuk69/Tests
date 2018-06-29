@@ -11,28 +11,27 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final DriverService driverService;
+    private final TestUtils testUtils;
     private final CaptchaRepository captchaRepository;
     private final TestRepository testRepository;
 
-    public UserServiceImpl(DriverService driverService, CaptchaRepository captchaRepository, TestRepository testRepository) {
-        this.driverService = driverService;
+    private long currentUserCode;
+
+    public UserServiceImpl(TestUtils testUtils, CaptchaRepository captchaRepository, TestRepository testRepository) {
+        this.testUtils = testUtils;
         this.captchaRepository = captchaRepository;
         this.testRepository = testRepository;
     }
 
     @Override
     public void uidLogin() {
-        WebDriver driver = driverService.getDriver();
+        WebDriver driver = testUtils.getDriver();
         uidLogin(driver);
-        testRepository.getTests().stream()
-                .filter(test -> test.getName().equals("Login test"))
-                .findFirst().get().setPassed(true);
+        testRepository.getTest("Login test").setPassed(true);
         driver.quit();
     }
 
@@ -43,17 +42,13 @@ public class UserServiceImpl implements UserService {
         driver.findElement(By.id("uid_password")).sendKeys("cSMJiMoS");
         driver.findElement(By.id("uid-form-submit")).click();
         while (!driver.getCurrentUrl().equals("http://selenium.at.ua/")) {
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
+            testUtils.sleep(1);
         }
     }
 
     @Override
     public void uidRegistrationFirst() {
-        WebDriver driver = driverService.getDriver();
+        WebDriver driver = testUtils.getDriver();
 
         driver.get("http://selenium.at.ua/register");
         if (driver.findElements(By.className("uf-reg-wrap")).size() == 0){
@@ -61,10 +56,11 @@ public class UserServiceImpl implements UserService {
         }
 
         driver.get("http://selenium.at.ua/register");
-        driver.findElement(By.id("uf-password")).sendKeys("Test-User");
-        driver.findElement(By.id("uf-name")).sendKeys("Test");
-        driver.findElement(By.id("uf-surname")).sendKeys("User");
-        driver.findElement(By.id("uf-nick")).sendKeys("TestU");
+        currentUserCode = System.currentTimeMillis();
+        driver.findElement(By.id("uf-password")).sendKeys("U-" + currentUserCode);
+        driver.findElement(By.id("uf-name")).sendKeys("Test" + currentUserCode);
+        driver.findElement(By.id("uf-surname")).sendKeys("User" + currentUserCode);
+        driver.findElement(By.id("uf-nick")).sendKeys("TestU" + currentUserCode);
         new Select(driver.findElement(By.id("uf-birthday-d"))).selectByVisibleText("3");
         new Select(driver.findElement(By.id("uf-birthday-m"))).selectByVisibleText("Март");
         new Select(driver.findElement(By.id("uf-birthday-y"))).selectByVisibleText("1994");
@@ -85,29 +81,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void uidRegistrationSecond(WebDriver driver, String captcha) {
-        String email = getRandomEmail();
+        WebDriver emailDriver = testUtils.getDriver();
+        emailDriver.get("https://temp-mail.org/ru/");
+        String email = emailDriver.findElement(By.id("mail")).getAttribute("value");
 
         driver.findElement(By.id("uf-email")).sendKeys(email);
         driver.findElement(By.id("fCode")).sendKeys(captcha);
         driver.findElement(By.id("uf-submit")).click();
         if (driver.findElements(By.id("uf-captcha-status-icon")).size() > 0){
+            testRepository.getTest("UID registration test").setException("Registration failed");
+            emailDriver.quit();
             driver.quit();
-            throw new RuntimeException("Incorrect captcha");
+            return;
         }
-        //verifyEmail(driver, email);
-        if (driver.findElement(By.cssSelector("div.register-form-wrapper h2")).getText().equals("Отлично!")) {
-            testRepository.getTests().stream()
-                    .filter(test -> test.getName().equals("UID registration test"))
-                    .findFirst().get().setPassed(true);
+        verifyEmail(emailDriver, email);
+        driver.get("http://selenium.at.ua/index/8");
+        String nick = driver.findElement(By.xpath("//div[@id='block1']/a")).getText();
+        String fullName = driver.findElement(By.id("block5")).getText();
+        if (nick.equals("TestU" + currentUserCode)&&
+                (fullName.equals("Имя: Test" + currentUserCode + " User" + currentUserCode + " [ Мужчина ]"))){
+            testRepository.getTest("UID registration test").setPassed(true);
             driver.quit();
         } else {
-            throw new RuntimeException("Registration failed");
+            testRepository.getTest("UID registration test").setException("Registration failed");
+            driver.quit();
         }
     }
 
     @Override
     public String getRandomEmail() {
-        WebDriver driver = driverService.getDriver();
+        WebDriver driver = testUtils.getDriver();
         driver.get("https://temp-mail.org/ru/");
         driver.findElement(By.id("click-to-delete")).click();
         String email = driver.findElement(By.id("mail")).getAttribute("value");
@@ -134,26 +137,24 @@ public class UserServiceImpl implements UserService {
         }
         JavascriptExecutor jse = (JavascriptExecutor)driver;
         jse.executeScript("window.scrollBy(0,-250)", "");
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            System.out.println(e.getMessage());
-        }
+        testUtils.sleep(1);
         driver.findElement(By.xpath("//button[@class='prior u-form-btn js-button-instance']")).click();
         WebDriverWait wait = new WebDriverWait(driver, 5);
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//p[@class='u-alert_text']")));
     }
 
     private void verifyEmail(WebDriver driver, String email){
-        driver.get("https://temp-mail.org/ru/");
+        /*driver.get("https://temp-mail.org/ru/");
+        driver.findElement(By.id("click-to-change")).click();
         driver.findElement(By.id("click-to-change")).click();
         String emailName = email.substring(0, email.indexOf('@'));
         String emailDomain = email.substring(email.indexOf('@'), email.length());
-        driver.findElement(By.id("mail")).sendKeys(emailName); //не видит элемент
+        driver.findElement(By.xpath("//div[@class='col-sm-10']/input[@id='mail']")).sendKeys(emailName);
         new Select(driver.findElement(By.id("domain"))).selectByVisibleText(emailDomain);
-        driver.findElement(By.id("postbut")).click();
+        driver.findElement(By.id("postbut")).click();*/
         driver.findElement(By.id("click-to-refresh")).click();
         driver.findElement(By.className("title-subject")).click();
-        driver.findElement(By.xpath("//a[@rel='external']")).click();
+        driver.findElement(By.xpath("//table/tbody/tr/td/table/tbody/tr/td/a[@rel='external']")).click();
+        driver.quit();
     }
 }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
           integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous"/>
-    <title>Test results</title>
+    <title>Response codes result</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-success">
@@ -21,15 +21,13 @@
         </ul>
     </div>
 </nav>
-<div class="container">
-    <th:block th:each="test : ${selectedTests}">
-        <div>
-            <p th:text="${test.getName()}"></p>
-            <p th:text="${test.isPassed()}"></p>
-            <p th:if="${test.isPassed() == false}" th:text="${test.getException()}"></p>
-            <br/>
-        </div>
-    </th:block>
-</div>
+<table>
+    <tbody>
+    <tr th:each="code : ${responseCodes.entrySet()}">
+        <td th:text="${code.getKey()}"></td>
+        <td th:text="${code.getValue()}"></td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

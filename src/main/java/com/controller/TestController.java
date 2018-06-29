@@ -4,6 +4,7 @@ import com.data.Captcha;
 import com.data.Test;
 import com.repository.CaptchaRepository;
 import com.repository.TestRepository;
+import com.service.ResponseCodeService;
 import com.service.TestService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +21,13 @@ public class TestController {
     private final TestService testService;
     private final CaptchaRepository captchaRepository;
     private final TestRepository testRepository;
+    private final ResponseCodeService responseCodeService;
 
-    public TestController(TestService testService, CaptchaRepository captchaRepository, TestRepository testRepository) {
+    public TestController(TestService testService, CaptchaRepository captchaRepository, TestRepository testRepository, ResponseCodeService responseCodeService) {
         this.testService = testService;
         this.captchaRepository = captchaRepository;
         this.testRepository = testRepository;
+        this.responseCodeService = responseCodeService;
     }
 
     @GetMapping("/")
@@ -59,6 +62,18 @@ public class TestController {
                 .filter(Test::isSelected).collect(Collectors.toList());
         model.addAttribute("selectedTests", selectedTests);
         return "testResult";
+    }
+
+    @GetMapping("/responseCodes")
+    public String getResponseCodes(Model model){
+        model.addAttribute("pages", responseCodeService.getPages());
+        return "responseCodes";
+    }
+
+    @PostMapping("/responseCodesResult")
+    public String responseCodes(Model model, @RequestParam(value = "selectedPages", required = false) ArrayList<String> selectedPages){
+        model.addAttribute("responseCodes", responseCodeService.getResponseCodes(selectedPages));
+        return "responseCodesResult";
     }
 
     @GetMapping("/captchaScreen")

@@ -22,7 +22,13 @@ public class TestRepository {
         return tests;
     }
 
-    public void setTests(List<Test> tests) {
-        this.tests = tests;
+    public Test getTest(String name) {
+        if (tests.stream().anyMatch(test -> test.getName().equals(name))) {
+            return tests.stream()
+                    .filter(test -> test.getName().equals(name))
+                    .findFirst().get();
+        } else {
+            throw new RuntimeException("Such test doesn't exist");
+        }
     }
 }
