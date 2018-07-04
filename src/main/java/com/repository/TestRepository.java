@@ -14,6 +14,10 @@ public class TestRepository {
     public TestRepository() {
         tests.add(new Test("News add test"));
         tests.add(new Test("News delete test"));
+        tests.add(new Test("Blog add test"));
+        tests.add(new Test("Blog delete test"));
+        tests.add(new Test("Dir add test"));
+        tests.add(new Test("Dir delete test"));
         tests.add(new Test("Login test"));
         tests.add(new Test("UID registration test"));
     }

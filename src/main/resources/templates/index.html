@@ -26,6 +26,7 @@
         <div class="checkbox">
             <th:block th:each="test : ${testList}">
                 <label><input type="checkbox" name="selectedTests" th:value="${test.getName()}" th:text="${test.getName()}"/></label>
+                <br/>
             </th:block>
         </div>
         <button type="submit" class="btn btn-success">Start</button>
