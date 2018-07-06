@@ -41,6 +41,12 @@ public class UserServiceImpl implements UserService {
         driver.findElement(By.id("uid_email")).sendKeys("dima.k@ucoz-team.net");
         driver.findElement(By.id("uid_password")).sendKeys("cSMJiMoS");
         driver.findElement(By.id("uid-form-submit")).click();
+        try {
+            if (driver.findElement(By.className("uid-error")).isEnabled()){
+                uidLogin(driver);
+            }
+        } catch (NoSuchElementException ignored){
+        }
         while (!driver.getCurrentUrl().equals("http://selenium.at.ua/")) {
             testUtils.sleep(1);
         }

@@ -5,6 +5,7 @@ import com.repository.CaptchaRepository;
 import com.repository.TestRepository;
 import com.service.Modules.BlogService;
 import com.service.Modules.DirService;
+import com.service.Modules.FAQService;
 import com.service.Modules.NewsService;
 import org.springframework.stereotype.Service;
 
@@ -17,14 +18,16 @@ public class TestServiceImpl implements TestService {
     private final NewsService newsService;
     private final BlogService blogService;
     private final DirService dirService;
+    private final FAQService faqService;
     private final UserService userService;
     private final CaptchaRepository captchaRepository;
     private final TestRepository testRepository;
 
-    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
+    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, FAQService faqService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
         this.newsService = newsService;
         this.blogService = blogService;
         this.dirService = dirService;
+        this.faqService = faqService;
         this.userService = userService;
         this.captchaRepository = captchaRepository;
         this.testRepository = testRepository;
@@ -51,6 +54,12 @@ public class TestServiceImpl implements TestService {
                     break;
                 case "Dir delete test":
                     dirService.delete();
+                    break;
+                case "FAQ add test":
+                    faqService.add();
+                    break;
+                case "FAQ delete test":
+                    faqService.delete();
                     break;
                 case "Login test":
                     userService.uidLogin();
