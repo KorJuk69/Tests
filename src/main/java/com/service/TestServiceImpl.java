@@ -3,10 +3,7 @@ package com.service;
 import com.data.Captcha;
 import com.repository.CaptchaRepository;
 import com.repository.TestRepository;
-import com.service.Modules.BlogService;
-import com.service.Modules.DirService;
-import com.service.Modules.FAQService;
-import com.service.Modules.NewsService;
+import com.service.ModuleService.Modules.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,15 +16,17 @@ public class TestServiceImpl implements TestService {
     private final BlogService blogService;
     private final DirService dirService;
     private final FAQService faqService;
+    private final BoardService boardService;
     private final UserService userService;
     private final CaptchaRepository captchaRepository;
     private final TestRepository testRepository;
 
-    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, FAQService faqService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
+    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, FAQService faqService, BoardService boardService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
         this.newsService = newsService;
         this.blogService = blogService;
         this.dirService = dirService;
         this.faqService = faqService;
+        this.boardService = boardService;
         this.userService = userService;
         this.captchaRepository = captchaRepository;
         this.testRepository = testRepository;
@@ -60,6 +59,12 @@ public class TestServiceImpl implements TestService {
                     break;
                 case "FAQ delete test":
                     faqService.delete();
+                    break;
+                case "Board add test":
+                    boardService.add();
+                    break;
+                case "Board delete test":
+                    boardService.delete();
                     break;
                 case "Login test":
                     userService.uidLogin();

@@ -1,11 +1,12 @@
-package com.service.Modules;
+package com.service.ModuleService.Modules;
 
 import com.repository.TestRepository;
+import com.service.ModuleService.DeleteMaterialService;
+import com.service.ModuleService.ModuleService;
 import com.service.TestUtils;
 import com.service.UserService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.springframework.stereotype.Service;
 
@@ -13,16 +14,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class FAQService implements ModuleService{
+public class FAQService implements ModuleService {
 
     private final TestUtils testUtils;
     private final UserService userService;
     private final TestRepository testRepository;
+    private final DeleteMaterialService deleteMaterialService;
 
-    public FAQService(TestUtils testUtils, UserService userService, TestRepository testRepository) {
+    public FAQService(TestUtils testUtils, UserService userService, TestRepository testRepository, DeleteMaterialService deleteMaterialService) {
         this.testUtils = testUtils;
         this.userService = userService;
         this.testRepository = testRepository;
+        this.deleteMaterialService = deleteMaterialService;
     }
 
     @Override
@@ -98,11 +101,6 @@ public class FAQService implements ModuleService{
 
     @Override
     public void delete() {
-
-    }
-
-    @Override
-    public void verifyDelete(WebElement title, WebDriver driver) {
-
+        deleteMaterialService.delete("FAQ", "/faq/1-1");
     }
 }
