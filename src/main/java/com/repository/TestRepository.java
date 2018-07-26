@@ -22,6 +22,10 @@ public class TestRepository {
         tests.add(new Test("FAQ delete test"));
         tests.add(new Test("Board add test"));
         tests.add(new Test("Board delete test"));
+        tests.add(new Test("Publ add test"));
+        tests.add(new Test("Publ delete test"));
+        tests.add(new Test("Load add test"));
+        tests.add(new Test("Load delete test"));
         tests.add(new Test("Login test"));
         tests.add(new Test("UID registration test"));
     }

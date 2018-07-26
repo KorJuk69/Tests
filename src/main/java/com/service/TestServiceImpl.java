@@ -17,16 +17,20 @@ public class TestServiceImpl implements TestService {
     private final DirService dirService;
     private final FAQService faqService;
     private final BoardService boardService;
+    private final PublService publService;
+    private final LoadService loadService;
     private final UserService userService;
     private final CaptchaRepository captchaRepository;
     private final TestRepository testRepository;
 
-    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, FAQService faqService, BoardService boardService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
+    public TestServiceImpl(NewsService newsService, BlogService blogService, DirService dirService, FAQService faqService, BoardService boardService, PublService publService, LoadService loadService, UserService userService, CaptchaRepository captchaRepository, TestRepository testRepository) {
         this.newsService = newsService;
         this.blogService = blogService;
         this.dirService = dirService;
         this.faqService = faqService;
         this.boardService = boardService;
+        this.publService = publService;
+        this.loadService = loadService;
         this.userService = userService;
         this.captchaRepository = captchaRepository;
         this.testRepository = testRepository;
@@ -65,6 +69,18 @@ public class TestServiceImpl implements TestService {
                     break;
                 case "Board delete test":
                     boardService.delete();
+                    break;
+                case "Publ add test":
+                    publService.add();
+                    break;
+                case "Publ delete test":
+                    publService.delete();
+                    break;
+                case "Load add test":
+                    loadService.add();
+                    break;
+                case "Load delete test":
+                    loadService.delete();
                     break;
                 case "Login test":
                     userService.uidLogin();
